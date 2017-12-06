@@ -1,0 +1,33 @@
+# To get started with security, check out the documentation:
+# https://symfony.com/doc/current/security.html
+security:
+
+    # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
+    providers:
+        sfdc_hwi_provider:
+          id: sfdc_user.oauth_user_provider
+
+
+    firewalls:
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            anonymous: true
+            logout:
+              path: /logout
+              target: /
+            oauth:
+                resource_owners:
+                    salesforce: "/login/check-salesforce"
+                login_path: /login
+                use_forward: false
+                use_referer: false
+                failure_path: null
+                default_target_path: /
+                oauth_user_provider:
+                    service: sfdc_user.oauth_user_provider
+
+    access_control:

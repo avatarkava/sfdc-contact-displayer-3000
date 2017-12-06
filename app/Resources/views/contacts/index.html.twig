@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    {% if (oauth is not null) %}
+        <h2>Welcome back, {{ oauth.display_name }}!</h2>
+        <form>
+            <div class="form-group">
+                <label for="contact-list">Here's a list of your Salesforce contacts:</label>
+                <select class="form-control" name="contact-list" id="contact-list">
+                </select>
+                <button id="btn-refresh" class="btn btn-secondary mt-2">Refresh List</button>
+            </div>
+        </form>
+        <p>... and that's about all we can do for you.</p>
+        <a id="btn-logout" class="btn btn-primary btn-lg" href="{{  path('logout') }}">Log Out</a>
+    {% else %}
+        <h2>Please Log In</h2>
+        <p>We're ready to wow you with an incredible list of contacts.  Please log in with Salesforce to continue.</p>
+        <a id="btn-login" class="btn btn-primary btn-lg" href="{{  path('salesforce_login') }}">Log in with Salesforce</a>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+<script>
+// @TODO Abstract out into a JS library in a refactoring pass
+$(function() {
+
+    getContacts();
+
+    $('#btn-refresh').click(function() {
+        event.preventDefault();
+        // @TODO Debounce + UI elements
+        getContacts();
+    });
+
+    $('#btn-logout').click(function() {
+        var $this = $(this);
+        $this.text("Please Wait...");
+        $this.attr("disabled", "disabled");
+        $this.removeClass("btn-primary");
+    });
+
+
+});
+
+// Calls Salesforce REST API with jQuery
+function getContacts() {
+    const access_token = "{{ access_token }}";
+
+    $.ajax({
+        type: "GET",
+        cache: false,
+        dataType: "json",
+        url: "https://{{ salesforce_instance }}.salesforce.com/services/data/v41.0/query/?q=" + encodeURI("{{ salesforce_contact_soql }}"),
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Bearer " + access_token);
+            xhr.setRequestHeader("Accept", "application/json");
+        },
+        success: function (data) {
+            console.log(data);
+            updateContacts(data.records);
+        },
+        failure: function (data) {
+            alert("We encountered an error");
+        }
+    });
+}
+
+// Clear the list of contacts and reappend results based on response from API call
+function updateContacts($records) {
+    $contactList = $("#contact-list");
+    $contactList.html('');
+
+    if ($records.length < 1) {
+        $contactList.append($("<option/>").val("").text("-- No Contacts Found--"));
+    }
+    $records.forEach(function(record){
+        $contactList.append($("<option/>").val(record.Id).text(record.Name));
+    });
+    console.log("Contact list updated with " + $records.length + " records..");
+    console.log($records);
+}
+</script>
+{% endblock %}

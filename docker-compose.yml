@@ -1,0 +1,38 @@
+version: "3"
+
+services:
+  nginx:
+    build: ./docker/nginx/
+    restart: always
+    ports:
+      - 80:80
+      - 8080:80
+      - 443:443
+      - 8443:443
+    volumes:
+      - "${PROJECT_ROOT}:/var/www/demo:ro"
+    networks:
+      - server
+    depends_on:
+      - php-fpm
+
+  php-fpm:
+    build:
+      context: .
+      dockerfile: docker/php-fpm/Dockerfile
+    restart: always
+    ports:
+      - 9000:9000
+    expose:
+      - 9000
+    volumes:
+      - "${PROJECT_ROOT}:/var/www/demo"
+    networks:
+      - server
+    command: /bin/bash -c "/usr/bin/composer install -d /var/www/demo --no-interaction && php-fpm"
+
+volumes:
+  data:
+
+networks:
+  server:
