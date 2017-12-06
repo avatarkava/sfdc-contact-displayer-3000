@@ -20,6 +20,7 @@ class DefaultController extends Controller
     {
         $session = $this->get('session');
 
+        // Symfony will automatically throw exceptions when trying to pull parameters that don't exist
         return $this->render('contacts/index.html.twig', array(
             'access_token' => $session->get('access_token'),
             'oauth' => $session->get('oauth_data'),

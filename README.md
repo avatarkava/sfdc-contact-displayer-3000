@@ -38,13 +38,14 @@ This package is optimized to be installed against a docker instance and includes
     * client_id is the "Consumer Key"
     * client_secret is the "Consumer Secret"
     * instance (e.g., na25) 
-3. Ensure docker is running.
-4. Run ```docker-compose up```, which will set up several services:
+3. Copy env.dist to .env in the project root (Docker uses this)
+4. Ensure docker is running.
+5. Run ```docker-compose up```, which will set up several services:
     * nginx with a self-signed certificate and configuration for demo.ldev
     * php7-fpm     
-5. Docker-compose will also link your current project directory over into the instance (so you can make live changes) and run composer for you to grab all dependencies.
-6. Depending on your local environment, you may need to add a host entry for the domain you wish to
-7. After allowing a few minutes for the containers to build and composer to install dependencies, your project should be available at https://demo.ldev or whatever domain you chose to set up. 
+6. Docker-compose will also link your current project directory over into the instance (so you can make live changes) and run composer for you to grab all dependencies.
+7. Depending on your local environment, you may need to add a host entry for the domain you wish to
+8. After allowing a few minutes for the containers to build and composer to install dependencies, your project should be available at https://demo.ldev or whatever domain you chose to set up. 
 
 ## Known Issues
 * OAuth login supplied by https://github.com/hwi/HWIOAuthBundle intermittently throws exceptions and needs some more robust handling when clicking the "Log In" button.  Clicking on the "salesforce" link on the resulting exception page will, however, get you logged in.
