@@ -59,7 +59,6 @@ function getContacts() {
             xhr.setRequestHeader("Accept", "application/json");
         },
         success: function (data) {
-            console.log(data);
             updateContacts(data.records);
         },
         failure: function (data) {
@@ -80,8 +79,7 @@ function updateContacts($records) {
     $records.forEach(function(record){
         $contactList.append($("<option/>").val(record.Id).text(record.Name));
     });
-    console.log("Contact list updated with " + $records.length + " records..");
-    console.log($records);
+    console.log("Contact list updated with " + $records.length + " records.");
 }
 </script>
 {% endblock %}
