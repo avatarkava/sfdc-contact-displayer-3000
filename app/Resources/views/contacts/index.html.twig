@@ -43,6 +43,8 @@ $(function() {
 });
 
 // Calls Salesforce REST API with jQuery
+// @TODO: Implement storing the Bearer token in httpOnly or using the server as a passthrough to help mitigate CSRF
+// - Through server will help eliminate need for CORS protection
 function getContacts() {
     const access_token = "{{ access_token }}";
 
