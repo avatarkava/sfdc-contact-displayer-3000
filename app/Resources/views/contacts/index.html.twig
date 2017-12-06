@@ -72,6 +72,7 @@ function updateContacts($records) {
 
     if ($records.length < 1) {
         $contactList.append($("<option/>").val("").text("-- No Contacts Found--"));
+        return;
     }
     $records.forEach(function(record){
         $contactList.append($("<option/>").val(record.Id).text(record.Name));
